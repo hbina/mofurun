@@ -4,7 +4,7 @@ version = "0.1.1"
 authors = ["Hanif Bin Ariffin <hanif.ariffin.4326@gmail.com>"]
 edition = "2018"
 repository = "https://github.com/hbina/mofurun"
-description = "Multi variant Optimized Fun U....okay Mofu is just a cute name okay. Experiment implementation of Vec that stores the state of the underlying array through its enum."
+description = "Multi variant Optimized Fun U....okay Mofu is just a cute name okay. Experimental implementation of Vec that stores the state of the underlying array through its enum."
 license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
