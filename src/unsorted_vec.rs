@@ -1,7 +1,5 @@
 use crate::sorted_vec::SortedVec;
 
-use std::ops::{Deref, DerefMut};
-
 #[derive(Debug, Default, Eq, PartialEq, Ord, PartialOrd)]
 pub struct UnsortedVec<T> {
     pub vec: Vec<T>,
@@ -16,6 +14,15 @@ impl<T> From<SortedVec<T>> for UnsortedVec<T> {
 impl<T> AsRef<[T]> for UnsortedVec<T> {
     fn as_ref(&self) -> &[T] {
         &self.vec
+    }
+}
+
+impl<T> IntoIterator for UnsortedVec<T> {
+    type Item = T;
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.vec.into_iter()
     }
 }
 
