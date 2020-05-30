@@ -1,5 +1,7 @@
 use crate::sorted_vec::SortedVec;
 
+use std::ops::{Deref, DerefMut};
+
 #[derive(Debug, Default, Eq, PartialEq, Ord, PartialOrd)]
 pub struct UnsortedVec<T> {
     pub vec: Vec<T>,
@@ -8,6 +10,12 @@ pub struct UnsortedVec<T> {
 impl<T> From<SortedVec<T>> for UnsortedVec<T> {
     fn from(x: SortedVec<T>) -> UnsortedVec<T> {
         UnsortedVec { vec: x.vec }
+    }
+}
+
+impl<T> AsRef<[T]> for UnsortedVec<T> {
+    fn as_ref(&self) -> &[T] {
+        &self.vec
     }
 }
 
