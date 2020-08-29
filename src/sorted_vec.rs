@@ -1,6 +1,6 @@
 use crate::unsorted_vec::UnsortedVec;
 use std::cmp::Ordering;
-use std::iter::{Cloned, Copied, Cycle, Product, Rev, Sum};
+use std::iter::StepBy;
 
 #[derive(Debug, Default, PartialEq, Eq)]
 pub struct SortedVec<T>(pub(crate) Vec<T>);
@@ -23,6 +23,34 @@ impl<T> IntoIterator for SortedVec<T> {
         };
         std::mem::forget(self);
         result
+    }
+}
+
+impl<T> std::convert::TryFrom<Vec<T>> for SortedVec<T>
+where
+    T: PartialEq + PartialOrd,
+{
+    type Error = &'static str;
+
+    /// Tries to create a [`SortedVec`] from a `Vec`.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// # use mofurun::sorted_vec::SortedVec;
+    /// # use std::convert::TryFrom;
+    /// # pub fn main() -> Result<(), Box<dyn std::error::Error>> {
+    /// let sorted : SortedVec<i32> = SortedVec::try_from(vec![1,2,3,4,5,6])?;
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    fn try_from(from: Vec<T>) -> Result<SortedVec<T>, &'static str> {
+        if from.is_sorted() {
+            Ok(SortedVec(from))
+        } else {
+            Err("attempting to perform a conversion from a non-sorted `Vec` to `SortedVector`.")
+        }
     }
 }
 
@@ -60,6 +88,16 @@ pub struct SortedVecIterator<T> {
 impl<Ty> Iterator for SortedVecIterator<Ty> {
     type Item = Ty;
 
+    /// Returns the current element and marches the iterator forward.
+    /// This operation is O(1).
+    ///
+    /// # Example
+    /// ```rust
+    /// # use mofurun::sorted_vec::SortedVec;
+    /// # pub fn main() {
+    /// assert_eq!(Some(1), SortedVec::default().push(1).push(3).push(5).push(7).push(44).into_iter().next());
+    /// # }
+    /// ```
     fn next(&mut self) -> Option<Ty> {
         if self.index >= self.len {
             None
@@ -74,6 +112,16 @@ impl<Ty> Iterator for SortedVecIterator<Ty> {
         (self.len, Some(self.len))
     }
 
+    /// Returns the number of elements inside this iterator.
+    /// This operation is O(1).
+    ///
+    /// # Example
+    /// ```rust
+    /// # use mofurun::sorted_vec::SortedVec;
+    /// # pub fn main() {
+    /// assert_eq!(5, SortedVec::default().push(1).push(3).push(5).push(7).push(44).into_iter().count());
+    /// # }
+    /// ```
     fn count(self) -> usize
     where
         Self: Sized,
@@ -81,6 +129,16 @@ impl<Ty> Iterator for SortedVecIterator<Ty> {
         self.len
     }
 
+    /// Returns the last element inside a [`SortedVector`].
+    /// This operation is O(1).
+    ///
+    /// # Example
+    /// ```rust
+    /// # use mofurun::sorted_vec::SortedVec;
+    /// # pub fn main() {
+    /// assert_eq!(Some(44), SortedVec::default().push(1).push(3).push(5).push(7).push(44).into_iter().last());
+    /// # }
+    /// ```
     fn last(self) -> Option<Self::Item>
     where
         Self: Sized,
@@ -92,6 +150,16 @@ impl<Ty> Iterator for SortedVecIterator<Ty> {
         }
     }
 
+    /// Returns the nth element inside a [`SortedVector`].
+    /// This operation is O(1).
+    ///
+    /// # Example
+    /// ```rust
+    /// # use mofurun::sorted_vec::SortedVec;
+    /// # pub fn main() {
+    /// assert_eq!(Some(7), SortedVec::default().push(1).push(3).push(5).push(7).push(10).into_iter().nth(3));
+    /// # }
+    /// ```
     fn nth(&mut self, n: usize) -> Option<Self::Item> {
         if n >= self.len {
             None
@@ -100,14 +168,38 @@ impl<Ty> Iterator for SortedVecIterator<Ty> {
         }
     }
 
+    /// Returns the max element inside a [`SortedVector`].
+    /// This operation is O(1).
+    ///
+    /// # Example
+    /// ```rust
+    /// # use mofurun::sorted_vec::SortedVec;
+    /// # pub fn main() {
+    /// assert_eq!(Some(10), SortedVec::default().push(1).push(3).push(5).push(7).push(10).into_iter().max());
+    /// # }
+    /// ```
     fn max(self) -> Option<Self::Item>
     where
         Self: Sized,
         Self::Item: Ord,
     {
-        self.max()
+        if self.len == 0 {
+            None
+        } else {
+            unsafe { Some(std::ptr::read(self.ptr.add(self.len - 1))) }
+        }
     }
 
+    /// Returns the min element inside a [`SortedVector`].
+    /// This operation is O(1).
+    ///
+    /// # Example
+    /// ```rust
+    /// # use mofurun::sorted_vec::SortedVec;
+    /// # pub fn main() {
+    /// assert_eq!(Some(1), SortedVec::default().push(1).push(3).push(5).push(7).push(10).into_iter().min());
+    /// # }
+    /// ```
     fn min(self) -> Option<Self::Item>
     where
         Self: Sized,
@@ -118,50 +210,5 @@ impl<Ty> Iterator for SortedVecIterator<Ty> {
         } else {
             unsafe { Some(std::ptr::read(self.ptr.add(0))) }
         }
-    }
-
-    fn partial_cmp<I>(self, other: I) -> Option<Ordering>
-    where
-        I: IntoIterator,
-        Self::Item: PartialOrd<I::Item>,
-        Self: Sized,
-    {
-        unimplemented!()
-    }
-
-    fn lt<I>(self, other: I) -> bool
-    where
-        I: IntoIterator,
-        Self::Item: PartialOrd<I::Item>,
-        Self: Sized,
-    {
-        unimplemented!()
-    }
-
-    fn le<I>(self, other: I) -> bool
-    where
-        I: IntoIterator,
-        Self::Item: PartialOrd<I::Item>,
-        Self: Sized,
-    {
-        unimplemented!()
-    }
-
-    fn gt<I>(self, other: I) -> bool
-    where
-        I: IntoIterator,
-        Self::Item: PartialOrd<I::Item>,
-        Self: Sized,
-    {
-        unimplemented!()
-    }
-
-    fn ge<I>(self, other: I) -> bool
-    where
-        I: IntoIterator,
-        Self::Item: PartialOrd<I::Item>,
-        Self: Sized,
-    {
-        unimplemented!()
     }
 }
