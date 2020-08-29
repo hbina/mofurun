@@ -1,10 +1,4 @@
 use crate::sorted_vec::SortedVec;
-use std::cmp::Ordering;
-use std::iter::{
-    Chain, Cloned, Copied, Cycle, Enumerate, Filter, FilterMap, FlatMap, Flatten, FromIterator,
-    Fuse, Inspect, Map, Peekable, Product, Rev, Scan, Skip, SkipWhile, StepBy, Sum, Take,
-    TakeWhile,
-};
 
 /// An unsorted variant of the vector.
 #[derive(Debug, Default, PartialEq, Eq)]
@@ -77,9 +71,9 @@ impl<Item> Iterator for UnsortedVecIterator<Item> {
     ///
     /// # Example
     /// ```rust
-    /// # use mofurun::sorted_vec::SortedVec;
+    /// # use mofurun::unsorted_vec::UnsortedVec;
     /// # pub fn main() {
-    /// assert_eq!(Some(1), SortedVec::default().push(1).push(3).push(5).push(7).push(44).into_iter().next());
+    /// assert_eq!(Some(1), UnsortedVec::default().push(1).push(3).push(5).push(7).push(44).into_iter().next());
     /// # }
     /// ```
     fn next(&mut self) -> Option<Self::Item> {
@@ -97,9 +91,9 @@ impl<Item> Iterator for UnsortedVecIterator<Item> {
     ///
     /// # Example
     /// ```rust
-    /// # use mofurun::sorted_vec::SortedVec;
+    /// # use mofurun::unsorted_vec::UnsortedVec;
     /// # pub fn main() {
-    /// assert_eq!((5, Some(5)), SortedVec::default().push(1).push(3).push(5).push(7).push(44).into_iter().size_hint());
+    /// assert_eq!((5, Some(5)), UnsortedVec::default().push(1).push(3).push(5).push(7).push(44).into_iter().size_hint());
     /// # }
     /// ```
     fn size_hint(&self) -> (usize, Option<usize>) {
@@ -111,9 +105,9 @@ impl<Item> Iterator for UnsortedVecIterator<Item> {
     ///
     /// # Example
     /// ```rust
-    /// # use mofurun::sorted_vec::SortedVec;
+    /// # use mofurun::unsorted_vec::UnsortedVec;
     /// # pub fn main() {
-    /// assert_eq!(5, SortedVec::default().push(1).push(3).push(5).push(7).push(44).into_iter().count());
+    /// assert_eq!(5, UnsortedVec::default().push(1).push(3).push(5).push(7).push(44).into_iter().count());
     /// # }
     /// ```
     fn count(self) -> usize

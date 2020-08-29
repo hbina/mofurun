@@ -1,6 +1,4 @@
 use crate::unsorted_vec::UnsortedVec;
-use std::cmp::Ordering;
-use std::iter::StepBy;
 
 #[derive(Debug, Default, PartialEq, Eq)]
 pub struct SortedVec<T>(pub(crate) Vec<T>);
@@ -49,14 +47,14 @@ where
         if from.is_sorted() {
             Ok(SortedVec(from))
         } else {
-            Err("attempting to perform a conversion from a non-sorted `Vec` to `SortedVector`.")
+            Err("attempting to perform a conversion from a non-sorted `Vec` to `SortedVec`.")
         }
     }
 }
 
 /// Original functions.
 impl<T> SortedVec<T> {
-    /// Pushes an element into the vector and returns an [`UnsortedVector`] variant of this vector.
+    /// Pushes an element into the vector and returns an [`UnsortedVec`] variant of this vector.
     ///
     /// # Example
     ///
@@ -129,7 +127,7 @@ impl<Ty> Iterator for SortedVecIterator<Ty> {
         self.len
     }
 
-    /// Returns the last element inside a [`SortedVector`].
+    /// Returns the last element inside a [`SortedVec`].
     /// This operation is O(1).
     ///
     /// # Example
@@ -150,7 +148,7 @@ impl<Ty> Iterator for SortedVecIterator<Ty> {
         }
     }
 
-    /// Returns the nth element inside a [`SortedVector`].
+    /// Returns the nth element inside a [`SortedVec`].
     /// This operation is O(1).
     ///
     /// # Example
@@ -168,7 +166,7 @@ impl<Ty> Iterator for SortedVecIterator<Ty> {
         }
     }
 
-    /// Returns the max element inside a [`SortedVector`].
+    /// Returns the max element inside a [`SortedVec`].
     /// This operation is O(1).
     ///
     /// # Example
@@ -190,7 +188,7 @@ impl<Ty> Iterator for SortedVecIterator<Ty> {
         }
     }
 
-    /// Returns the min element inside a [`SortedVector`].
+    /// Returns the min element inside a [`SortedVec`].
     /// This operation is O(1).
     ///
     /// # Example
