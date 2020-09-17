@@ -1,11 +1,11 @@
 [package]
 name = "mofurun"
-version = "0.4.0"
+version = "0.5.0"
 authors = ["Hanif Bin Ariffin <hanif.ariffin.4326@gmail.com>"]
 edition = "2018"
 repository = "https://github.com/hbina/mofurun"
 description = "Multi variant Optimized Fun U....okay Mofu is just a cute name okay. Experimental implementation of Vec that stores the state of the underlying array through its enum."
-categories = ["data-structures", "cute", "mofurun"]
+categories = ["data-structures"]
 license = "MIT"
 readme = "README.md"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
